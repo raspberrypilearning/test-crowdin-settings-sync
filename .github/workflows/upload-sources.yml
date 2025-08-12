@@ -1,0 +1,34 @@
+name: Crowdin Upload Action
+
+on:
+  push:
+    paths: [ "en/**/*.*" ]
+    branches: [ draft, master ]
+
+jobs:
+  crowdin-upload:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Crowdin push
+        uses: crowdin/github-action@v2
+        with:
+          upload_sources: true
+          upload_translations: false
+          download_translations: false
+        env:
+          CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+
+      - name: Hide matching strings
+        run: |
+          # List all strings, filter by your pattern, get IDs only
+          crowdin string list | grep '--- /print-only ---' | awk '{print $1}' | tr -d '#' > ids.txt
+
+          # Loop over IDs and hide them
+          while read -r id; do
+            echo "Hiding string ID: $id"
+            crowdin string edit "$id" --hidden
+          done < ids.txt
