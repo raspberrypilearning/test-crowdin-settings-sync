@@ -25,8 +25,8 @@ jobs:
       - name: Hide matching strings
         uses: crowdin/github-action@v2
         with:
-          command: bash
-          command_args: -c 'crowdin string list | grep -F -- "--- /print-only ---" | awk "{print \$1}" | tr -d "#" | while read -r id; do crowdin string edit "$id" --hidden; done'
+          command: string list
+          command_args: ' | grep -F -- "--- /print-only ---" | awk "{print \$1}" | tr -d "#" | while read -r id; do crowdin string edit "$id" --hidden; done'
         env:
           CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
           CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
