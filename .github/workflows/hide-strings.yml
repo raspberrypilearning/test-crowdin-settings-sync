@@ -15,6 +15,7 @@ jobs:
           unzip crowdin-cli.zip -d crowdin-cli
           mkdir -p ~/bin
           mv crowdin-cli/*/crowdin ~/bin/crowdin
+          cp crowdin-cli/*/crowdin-cli.jar ~/bin/crowdin-cli.jar
           chmod +x ~/bin/crowdin
           echo "PATH=$HOME/bin:$PATH" >> $GITHUB_ENV
 
