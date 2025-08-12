@@ -22,7 +22,7 @@ jobs:
       - name: Hide matching strings
         run: |
           crowdin --version
-          crowdin string list --verbose | grep -- '--- /no-print ---' | awk '{print $1}' | tr -d '#' |
+          crowdin string list --verbose | grep -E -- '--- /no-print ---|--- no-print|--- print-only' | awk '{print $1}' | tr -d '#' |
           while read -r id; do
             crowdin string edit "$id" --hidden
           done
