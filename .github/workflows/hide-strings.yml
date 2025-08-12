@@ -16,9 +16,6 @@ jobs:
           mkdir -p ~/bin
           mv crowdin-cli/*/crowdin ~/bin/crowdin
           echo "PATH=$HOME/bin:$PATH" >> $GITHUB_ENV
-
-      - name: Hide matching strings
-        run: |
           crowdin --version
           crowdin string list | grep -F -- '--- /print-only ---' | awk '{print $1}' | tr -d '#' |
           while read -r id; do
