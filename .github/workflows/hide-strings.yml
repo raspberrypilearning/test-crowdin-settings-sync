@@ -1,0 +1,27 @@
+name: Crowdin Hide Strings
+
+on:
+  push:
+    paths: ["en/**/*.*"]
+    branches: [draft, master]
+
+jobs:
+  crowdin-upload:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Crowdin CLI
+        run: |
+          curl -L https://github.com/crowdin/crowdin-cli/releases/latest/download/crowdin-cli.zip -o crowdin-cli.zip
+          unzip crowdin-cli.zip -d crowdin-cli
+          sudo mv crowdin-cli/crowdin /usr/local/bin/crowdin
+          crowdin --version
+
+      - name: Hide matching strings
+        run: |
+          crowdin string list | grep -F -- '--- /print-only ---' | awk '{print $1}' | tr -d '#' |
+          while read -r id; do
+            crowdin string edit "$id" --hidden
+          done
+        env:
+          CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
