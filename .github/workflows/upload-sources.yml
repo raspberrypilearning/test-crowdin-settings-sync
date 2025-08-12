@@ -23,12 +23,10 @@ jobs:
           CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
 
       - name: Hide matching strings
-        run: |
-          # List all strings, filter by your pattern, get IDs only
-          crowdin string list | grep -- '--- /print-only ---' | awk '{print $1}' | tr -d '#' > ids.txt
-
-          # Loop over IDs and hide them
-          while read -r id; do
-            echo "Hiding string ID: $id"
-            crowdin string edit "$id" --hidden
-          done < ids.txt
+        uses: crowdin/github-action@v2
+        with:
+          command: bash
+          command_args: -c 'crowdin string list | grep -F -- "--- /print-only ---" | awk "{print \$1}" | tr -d "#" | while read -r id; do crowdin string edit "$id" --hidden; done'
+        env:
+          CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
