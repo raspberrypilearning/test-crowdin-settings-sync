@@ -9,14 +9,32 @@ set -e
 #   crowdin string edit "$id" --hidden
 # done < ids.txt
 
-crowdin string list --verbose | awk '
-  /^#/ {id=$1; getline; text=$0}
-  text ~ /--- \/print-only ---/ {print id}
+crowdin string list | awk '
+  /^#/ {
+    # When you hit an ID line, save it and reset content
+    if (id) {
+      # check if previous string content matched pattern
+      if (content ~ /--- \/print-only ---/) {
+        print id
+      }
+    }
+    id=$1
+    content=""
+    next
+  }
+  {
+    # accumulate multiline string content
+    content = content $0 "\n"
+  }
+  END {
+    # check last string
+    if (content ~ /--- \/print-only ---/) {
+      print id
+    }
+  }
 ' | tr -d '#' | while read -r id; do
   if [[ -n "$id" ]]; then
     echo "Hiding string ID: $id"
     crowdin string edit "$id" --hidden
-  else
-    echo "Skipping empty ID"
   fi
 done
