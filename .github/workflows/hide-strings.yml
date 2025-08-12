@@ -13,7 +13,9 @@ jobs:
         run: |
           curl -L https://github.com/crowdin/crowdin-cli/releases/latest/download/crowdin-cli.zip -o crowdin-cli.zip
           unzip crowdin-cli.zip -d crowdin-cli
-          sudo mv crowdin-cli/*/crowdin /usr/local/bin/crowdin
+          mkdir -p ~/bin
+          mv crowdin-cli/*/crowdin ~/bin/crowdin
+          echo "export PATH=$HOME/bin:$PATH" >> $GITHUB_ENV
           crowdin --version
 
       - name: Hide matching strings
