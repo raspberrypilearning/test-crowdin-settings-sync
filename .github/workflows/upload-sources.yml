@@ -25,7 +25,7 @@ jobs:
       - name: Hide matching strings
         run: |
           # List all strings, filter by your pattern, get IDs only
-          crowdin string list | grep '--- /print-only ---' | awk '{print $1}' | tr -d '#' > ids.txt
+          crowdin string list | grep -- '--- /print-only ---' | awk '{print $1}' | tr -d '#' > ids.txt
 
           # Loop over IDs and hide them
           while read -r id; do

@@ -4,7 +4,7 @@ OR
 
 A brief description - one or two sentences. 
 
-Something magical to test for Jo.
+Something magical to test for Jo!
 
 --- print-only ---
 ![ALT TEXT](images/IMAGE.png)
