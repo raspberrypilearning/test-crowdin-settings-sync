@@ -15,7 +15,7 @@ jobs:
           unzip crowdin-cli.zip -d crowdin-cli
           mkdir -p ~/bin
           mv crowdin-cli/*/crowdin ~/bin/crowdin
-          echo "export PATH=$HOME/bin:$PATH" >> $GITHUB_ENV
+          echo "PATH=$HOME/bin:$PATH" >> $GITHUB_ENV
 
       - name: Hide matching strings
         run: |
