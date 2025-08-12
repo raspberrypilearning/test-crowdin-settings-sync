@@ -9,32 +9,18 @@ set -e
 #   crowdin string edit "$id" --hidden
 # done < ids.txt
 
+echo "DEBUG: Listing all strings with IDs and content:"
+crowdin string list
+
+echo "DEBUG: Extracting candidate IDs with matching content:"
 crowdin string list | awk '
   /^#/ {
-    # When you hit an ID line, save it and reset content
     if (id) {
-      # check if previous string content matched pattern
-      if (content ~ /--- \/print-only ---/) {
-        print id
-      }
+      if (content ~ /--- \/print-only ---/) print id;
     }
-    id=$1
-    content=""
+    id=$1; content="";
     next
   }
-  {
-    # accumulate multiline string content
-    content = content $0 "\n"
-  }
-  END {
-    # check last string
-    if (content ~ /--- \/print-only ---/) {
-      print id
-    }
-  }
-' | tr -d '#' | while read -r id; do
-  if [[ -n "$id" ]]; then
-    echo "Hiding string ID: $id"
-    crowdin string edit "$id" --hidden
-  fi
-done
+  { content = content $0 "\n" }
+  END { if (content ~ /--- \/print-only ---/) print id }
+' | tr -d '#'
