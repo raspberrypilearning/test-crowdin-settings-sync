@@ -13,7 +13,7 @@ jobs:
         run: |
           curl -L https://github.com/crowdin/crowdin-cli/releases/latest/download/crowdin-cli.zip -o crowdin-cli.zip
           unzip crowdin-cli.zip -d crowdin-cli
-          sudo mv crowdin-cli/crowdin /usr/local/bin/crowdin
+          sudo mv crowdin-cli/*/crowdin /usr/local/bin/crowdin
           crowdin --version
 
       - name: Hide matching strings
